@@ -10,5 +10,5 @@ class Entity:
         self.color = color
 
     def move(self, dx: int, dy: int) -> None:
-        self.x +=dx
-        self.y +=dy
+        self.x += dx
+        self.y += dy
