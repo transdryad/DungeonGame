@@ -8,7 +8,7 @@ from game_map import GameMap
 import tile_types
 
 if TYPE_CHECKING:
-    from entity import Entity
+    from engine import Engine
 
 
 class RectangularRoom:
@@ -45,8 +45,9 @@ def place_entities(room: RectangularRoom, dungeon: GameMap, maximum_monsters: in
 
 
 def generate_dungeon(max_rooms: int, room_min_size: int, room_max_size: int, map_width: int,
-                     map_height: int, max_monsters_per_room: int, player: Entity,) -> GameMap:
-    dungeon = GameMap(map_width, map_height,  entities=[player])
+                     map_height: int, max_monsters_per_room: int, engine: Engine) -> GameMap:
+    player = engine.player
+    dungeon = GameMap(engine, map_width, map_height, entities=[player])
     rooms: List[RectangularRoom] = []
     for r in range(max_rooms):
         room_width = random.randint(room_min_size, room_max_size)
@@ -62,7 +63,7 @@ def generate_dungeon(max_rooms: int, room_min_size: int, room_max_size: int, map
 
         dungeon.tiles[new_room.inner] = tile_types.floor
         if len(rooms) == 0:
-            player.x, player.y = new_room.center
+            player.place(*new_room.center, gamemap=dungeon)
         else:
             for x, y in tunnel_between(rooms[-1].center, new_room.center):
                 dungeon.tiles[x, y] = tile_types.floor
