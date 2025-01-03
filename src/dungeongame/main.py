@@ -2,9 +2,9 @@
 import copy
 import tcod
 
-from engine import Engine
-import entities
-from procgen import generate_dungeon
+from .engine import Engine
+from .entities import player as p
+from .procgen import generate_dungeon
 
 
 def main() -> None:
@@ -20,11 +20,9 @@ def main() -> None:
 
     max_monsters_per_room = 2
 
-    tileset = tcod.tileset.load_tilesheet("sheet.png", 32, 8, tcod.tileset.CHARMAP_TCOD)
-    player = copy.deepcopy(entities.player)
+    tileset = tcod.tileset.load_tilesheet("dungeongame/static/sheet.png", 32, 8, tcod.tileset.CHARMAP_TCOD)
+    player = copy.deepcopy(p)
     engine = Engine(player=player)
-
-    player = copy.deepcopy(entities.player)
 
     engine.game_map = generate_dungeon(max_rooms=max_rooms, room_min_size=room_min_size, room_max_size=room_max_size,
                                        map_width=map_width, map_height=map_height,
@@ -37,7 +35,3 @@ def main() -> None:
         while True:
             engine.render(console=root_console, context=context)
             engine.event_handler.handle_events()
-
-
-if __name__ == "__main__":
-    main()
