@@ -1,4 +1,5 @@
-from src.dungeongame.main import main
+from src.dungeongame import main
 
 if __name__ == "__main__":
-    main()
+    print("Welcome to DungeonGame.")
+    main.main()
