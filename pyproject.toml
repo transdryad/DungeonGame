@@ -38,6 +38,6 @@ exclude = [
 packages = ["src"]
 
 [project.scripts]
-dungeongame = "main:main"
+dungeongame = "src.main:mainf"
 
 

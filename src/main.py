@@ -1,5 +1,6 @@
 from src.dungeongame import main
 
-if __name__ == "__main__":
+
+def mainf():
     print("Welcome to DungeonGame.")
     main.main()

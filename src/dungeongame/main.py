@@ -1,6 +1,9 @@
 #!/usr/bin/env/ python3
 import copy
+import os
+
 import tcod
+import os
 
 from .engine import Engine
 from .entities import player as p
@@ -19,8 +22,8 @@ def main() -> None:
     max_rooms = 30
 
     max_monsters_per_room = 2
-
-    tileset = tcod.tileset.load_tilesheet("dungeongame/static/sheet.png", 32, 8, tcod.tileset.CHARMAP_TCOD)
+    BASE_DIR = os.path.dirname(__file__)
+    tileset = tcod.tileset.load_tilesheet(BASE_DIR + "/static/sheet.png", 32, 8, tcod.tileset.CHARMAP_TCOD)
     player = copy.deepcopy(p)
     engine = Engine(player=player)
 
