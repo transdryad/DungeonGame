@@ -1,0 +1,43 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "src/__about__.py"
+
+[project]
+name = "dungeongame"
+dynamic = ["version"]
+description = 'A dungeon game.'
+readme = "README.md"
+requires-python = ">=3.11.1"
+license = "GPL-3.0-or-later"
+keywords = []
+authors = [
+  { name = "Hazel Viswanath", email = "viswanath.hazel@gmail.com" },
+]
+dependencies = [
+  "cffi~=1.17.1",
+  "numpy~=2.2.0",
+  "pycparser~=2.22",
+  "tcod~=16.2.3",
+  "typing_extensions~=4.12.2"
+]
+
+[project.urls]
+Documentation = "https://github.com/transdryad/dungeongame#readme"
+Issues = "https://github.com/transdryad/dungeongame/issues"
+Source = "https://github.com/transdryad/dungeongame"
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+    "/docs",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[project.scripts]
+dungeongame = "main:main"
+
+
