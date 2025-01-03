@@ -8,9 +8,9 @@ from tcod.map import compute_fov
 from .input_handlers import MainGameEventHandler
 
 if TYPE_CHECKING:
-    from entity import Actor
-    from game_map import GameMap
-    from input_handlers import EventHandler
+    from .entity import Actor
+    from .game_map import GameMap
+    from .input_handlers import EventHandler
 
 
 class Engine:

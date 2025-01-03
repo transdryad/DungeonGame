@@ -7,7 +7,7 @@ from ..dungeongame.input_handlers import GameOverEventHandler
 from ..dungeongame.render_order import RenderOrder
 
 if TYPE_CHECKING:
-    from src.dungeongame.entity import Actor
+    from ..dungeongame.entity import Actor
 
 
 class Fighter(BaseComponent):

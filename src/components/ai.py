@@ -8,7 +8,7 @@ from ..dungeongame.actions import Action, MeleeAction, MovementAction, WaitActio
 from .base_component import BaseComponent
 
 if TYPE_CHECKING:
-    from src.dungeongame.entity import Actor
+    from ..dungeongame.entity import Actor
 
 
 class BaseAI(Action, BaseComponent):
