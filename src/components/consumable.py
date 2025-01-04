@@ -8,7 +8,7 @@ from .base_component import BaseComponent
 from .ai import *
 from .inventory import Inventory
 from ..dungeongame.exceptions import Impossible
-from ..dungeongame.input_handlers import AreaRangedAttackHandler, SingleRangedAttackHandler
+from ..dungeongame.input_handlers import ActionOrHandler, AreaRangedAttackHandler, SingleRangedAttackHandler
 
 if TYPE_CHECKING:
     from ..dungeongame.entity import Actor, Item
@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 class Consumable(BaseComponent):
     parent: Item
 
-    def get_action(self, consumer: Actor) -> Optional[Action]:
+    def get_action(self, consumer: Actor) -> Optional[ActionOrHandler]:
         return ItemAction(consumer, self.parent)
 
     def activate(self, action: ItemAction) -> None:
@@ -35,10 +35,9 @@ class ConfusionConsumable(Consumable):
     def __init__(self, number_of_turns: int):
         self.number_of_turns = number_of_turns
 
-    def get_action(self, consumer: Actor) -> Optional[Action]:
+    def get_action(self, consumer: Actor) -> Optional[ActionOrHandler]:
         self.engine.message_log.add_message("Select a target location.", needs_target)
-        self.engine.event_handler = SingleRangedAttackHandler(self.engine, callback=lambda xy: ItemAction(consumer, self.parent, xy))
-        return None
+        return SingleRangedAttackHandler(self.engine, callback=lambda xy: ItemAction(consumer, self.parent, xy))
 
     def activate(self, action: ItemAction) -> None:
         consumer = action.entity
@@ -75,10 +74,9 @@ class FireballDamageConsumable(Consumable):
         self.damage = damage
         self.radius = radius
 
-    def get_action(self, consumer: Actor) -> Optional[Action]:
+    def get_action(self, consumer: Actor) -> AreaRangedAttackHandler:
         self.engine.message_log.add_message("Select a target location.", needs_target)
-        self.engine.event_handler = AreaRangedAttackHandler(self.engine, radius=self.radius, callback=lambda xy: ItemAction(consumer, self.parent, xy))
-        return None
+        return AreaRangedAttackHandler(self.engine, radius=self.radius, callback=lambda xy: ItemAction(consumer, self.parent, xy))
 
     def activate(self, action: ItemAction) -> None:
         target_xy = action.target_xy
