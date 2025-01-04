@@ -3,7 +3,7 @@ import random
 import tcod
 from typing import Iterator, List, Tuple, TYPE_CHECKING
 
-from .entities import orc, troll, health_potion
+from .entities import *
 from .game_map import GameMap
 from .tile_types import floor
 
@@ -47,7 +47,11 @@ def place_entities(room: RectangularRoom, dungeon: GameMap, maximum_monsters: in
         x = random.randint(room.x1 + 1, room.x2 - 1)
         y = random.randint(room.y1 + 1, room.y2 - 1)
         if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
-            health_potion.spawn(dungeon, x, y)
+            item_chance = random.random()
+            if item_chance < 0.7:
+                health_potion.spawn(dungeon, x, y)
+            else:
+                lightning_scroll.spawn(dungeon, x, y)
 
 
 def generate_dungeon(max_rooms: int, room_min_size: int, room_max_size: int, map_width: int,
