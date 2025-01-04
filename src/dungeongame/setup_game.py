@@ -14,13 +14,12 @@ from tcod import libtcodpy
 from .color import *
 from .engine import Engine
 from .entities import player as p
+from .game_map import GameWorld
 from .input_handlers import *
-from .procgen import generate_dungeon
-
 
 # Load the background image and remove the alpha channel.
 BASE_DIR = os.path.dirname(__file__)
-background_image = tcod.image.load(BASE_DIR+"/static/menu_background.png")[:, :, :3]
+background_image = tcod.image.load(BASE_DIR + "/static/menu_background.png")[:, :, :3]
 
 
 def new_game() -> Engine:
@@ -39,9 +38,12 @@ def new_game() -> Engine:
 
     engine = Engine(player=player)
 
-    engine.game_map = generate_dungeon(max_rooms=max_rooms, room_min_size=room_min_size, room_max_size=room_max_size,
-                                       map_width=map_width, map_height=map_height, max_monsters_per_room=max_monsters_per_room,
-                                       max_items_per_room=max_items_per_room, engine=engine)
+    engine.game_world = GameWorld(engine=engine, max_rooms=max_rooms, room_min_size=room_min_size,
+                                  room_max_size=room_max_size,
+                                  map_width=map_width, map_height=map_height,
+                                  max_monsters_per_room=max_monsters_per_room,
+                                  max_items_per_room=max_items_per_room)
+    engine.game_world.generate_floor()
     engine.update_fov()
 
     engine.message_log.add_message("Hello and welcome, adventurer, to yet another dungeon!", welcome_text)
@@ -62,8 +64,10 @@ class MainMenu(BaseEventHandler):
     def on_render(self, console: tcod.Console) -> None:
         """Render the main menu on a background image."""
         console.draw_semigraphics(background_image, 0, 0)
-        console.print(console.width // 2, console.height // 2 - 4, "DungeonGame", fg=menu_title, alignment=libtcodpy.CENTER)
-        console.print(console.width // 2, console.height - 2, "By Hazel Viswanath", fg=menu_title, alignment=libtcodpy.CENTER)
+        console.print(console.width // 2, console.height // 2 - 4, "DungeonGame", fg=menu_title,
+                      alignment=libtcodpy.CENTER)
+        console.print(console.width // 2, console.height - 2, "By Hazel Viswanath", fg=menu_title,
+                      alignment=libtcodpy.CENTER)
 
         menu_width = 24
         for i, text in enumerate(["[N] Play a new game", "[C] Continue last game", "[Q] Quit"]):

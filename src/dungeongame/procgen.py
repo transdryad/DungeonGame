@@ -5,7 +5,7 @@ from typing import Iterator, List, Tuple, TYPE_CHECKING
 
 from .entities import *
 from .game_map import GameMap
-from .tile_types import floor
+from .tile_types import floor, down_stairs
 
 if TYPE_CHECKING:
     from .engine import Engine
@@ -60,9 +60,10 @@ def place_entities(room: RectangularRoom, dungeon: GameMap, maximum_monsters: in
 
 def generate_dungeon(max_rooms: int, room_min_size: int, room_max_size: int, map_width: int,
                      map_height: int, max_monsters_per_room: int, max_items_per_room: int, engine: Engine) -> GameMap:
-    player = engine.player
-    dungeon = GameMap(engine, map_width, map_height, entities=[player])
+    playerg = engine.player
+    dungeon = GameMap(engine, map_width, map_height, entities=[playerg])
     rooms: List[RectangularRoom] = []
+    center_of_last_room = (0, 0)
     for r in range(max_rooms):
         room_width = random.randint(room_min_size, room_max_size)
         room_height = random.randint(room_min_size, room_max_size)
@@ -77,11 +78,14 @@ def generate_dungeon(max_rooms: int, room_min_size: int, room_max_size: int, map
 
         dungeon.tiles[new_room.inner] = floor
         if len(rooms) == 0:
-            player.place(*new_room.center, gamemap=dungeon)
+            playerg.place(*new_room.center, gamemap=dungeon)
         else:
             for x, y in tunnel_between(rooms[-1].center, new_room.center):
                 dungeon.tiles[x, y] = floor
+            center_of_last_room = new_room.center
         place_entities(new_room, dungeon, max_monsters_per_room, max_items_per_room)
+        dungeon.tiles[center_of_last_room] = down_stairs
+        dungeon.downstairs_location = center_of_last_room
         rooms.append(new_room)
     return dungeon
 

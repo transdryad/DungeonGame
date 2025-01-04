@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Optional, Tuple, TYPE_CHECKING
 
-from .color import player_atk, enemy_atk
+from .color import player_atk, enemy_atk, descend
 from .exceptions import Impossible
 
 if TYPE_CHECKING:
@@ -69,6 +69,16 @@ class DropItem(ItemAction):
 class WaitAction(Action):
     def perform(self) -> None:
         pass
+
+
+class TakeStairsAction(Action):
+    def perform(self) -> None:
+        """Take the stairs if any exist at the entity's location."""
+        if (self.entity.x, self.entity.y) == self.engine.game_map.downstairs_location:
+            self.engine.game_world.generate_floor()
+            self.engine.message_log.add_message("You descend the staircase.", descend)
+        else:
+            raise Impossible("There are no stairs here.")
 
 
 class ActionWithDirection(Action):
