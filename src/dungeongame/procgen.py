@@ -50,6 +50,10 @@ def place_entities(room: RectangularRoom, dungeon: GameMap, maximum_monsters: in
             item_chance = random.random()
             if item_chance < 0.7:
                 health_potion.spawn(dungeon, x, y)
+            elif item_chance < 0.8:
+                fireball_scroll.spawn(dungeon, x, y)
+            elif item_chance < 0.9:
+                confusion_scroll.spawn(dungeon, x, y)
             else:
                 lightning_scroll.spawn(dungeon, x, y)
 

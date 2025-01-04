@@ -11,4 +11,6 @@ troll = Actor(char="T", color=(0, 127, 0), name="Troll", ai_cls=HostileEnemy, fi
 # Items
 health_potion = Item(char="!", color=(127, 0, 255), name="Health Potion", consumable=HealingConsumable(amount=4))
 # Weapons
+confusion_scroll = Item(char="~", color=(207, 63, 255), name="Confusion Scroll", consumable=ConfusionConsumable(number_of_turns=10))
+fireball_scroll = Item(char="~", color=(255, 0, 0), name="Fireball Scroll", consumable=FireballDamageConsumable(damage=15, radius=3))
 lightning_scroll = Item(char="~", color=(255, 255, 0), name="Lightning Scroll", consumable=LightningDamageConsumable(damage=30, maximum_range=5))
