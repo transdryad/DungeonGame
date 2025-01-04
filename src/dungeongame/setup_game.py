@@ -7,13 +7,12 @@ import pickle
 import traceback
 from typing import Optional
 
-import os
 import tcod
 from tcod import libtcodpy
 
 from .color import *
 from .engine import Engine
-from .entities import player as p
+from .entities import player as p, dagger as d, leather_armor as la
 from .game_map import GameWorld
 from .input_handlers import *
 
@@ -42,6 +41,14 @@ def new_game() -> Engine:
     engine.update_fov()
 
     engine.message_log.add_message("Hello and welcome, adventurer, to yet another dungeon!", welcome_text)
+    dagger = copy.deepcopy(d)
+    leather_armor = copy.deepcopy(la)
+    dagger.parent = player.inventory
+    leather_armor.parent = player.inventory
+    player.inventory.items.append(dagger)
+    player.equipment.toggle_equip(dagger, add_message=False)
+    player.inventory.items.append(leather_armor)
+    player.equipment.toggle_equip(leather_armor, add_message=False)
     return engine
 
 

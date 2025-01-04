@@ -31,15 +31,6 @@ MOVE_KEYS = {
     tcod.event.KeySym.KP_7: (-1, -1),
     tcod.event.KeySym.KP_8: (0, -1),
     tcod.event.KeySym.KP_9: (1, -1),
-    # WASD keys.
-    tcod.event.KeySym.w: (0, -1),
-    tcod.event.KeySym.s: (0, 1),
-    tcod.event.KeySym.a: (-1, 0),
-    tcod.event.KeySym.d: (1, 0),
-    tcod.event.KeySym.q: (-1, -1),
-    tcod.event.KeySym.r: (-1, 1),
-    tcod.event.KeySym.e: (1, -1),
-    tcod.event.KeySym.f: (1, 1),
 }
 WAIT_KEYS = {
     tcod.event.KeySym.PERIOD,
@@ -264,7 +255,11 @@ class InventoryEventHandler(AskUserEventHandler):
         if number_of_items_in_inventory > 0:
             for i, item in enumerate(self.engine.player.inventory.items):
                 item_key = chr(ord("a") + i)
-                console.print(x + 1, y + i + 1, f"({item_key}) {item.name}")
+                is_equipped = self.engine.player.equipment.item_is_equipped(item)
+                item_string = f"({item_key}) {item.name}"
+                if is_equipped:
+                    item_string = f"{item_string} (E)"
+                console.print(x + 1, y + i + 1, item_string)
         else:
             console.print(x + 1, y + 1, "(Empty)")
 
@@ -291,8 +286,13 @@ class InventoryActivateHandler(InventoryEventHandler):
     TITLE = "Select an item to use"
 
     def on_item_selected(self, item: Item) -> Optional[ActionOrHandler]:
-        """Return the action for the selected item."""
-        return item.consumable.get_action(self.engine.player)
+        if item.consumable:
+            # Return the action for the selected item.
+            return item.consumable.get_action(self.engine.player)
+        elif item.equippable:
+            return EquipAction(self.engine.player, item)
+        else:
+            return None
 
 
 class InventoryDropHandler(InventoryEventHandler):
